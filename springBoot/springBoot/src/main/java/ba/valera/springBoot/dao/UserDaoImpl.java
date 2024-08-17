@@ -13,8 +13,6 @@ import java.util.List;
 public class UserDaoImpl implements UserDao {
     @PersistenceContext
     private EntityManager entityManager;
-
-
     @Override
     public void removeUserById(long id) {
         try {
@@ -22,9 +20,9 @@ public class UserDaoImpl implements UserDao {
                 entityManager.remove(getUserById(id));
             }
         } catch (EntityNotFoundException e) {
+            getUserById(id);
 
         }
-
     }
 
     @Override
@@ -35,7 +33,11 @@ public class UserDaoImpl implements UserDao {
 
     @Override
     public User getUserById(long id) {
-        return entityManager.find(User.class, id);
+        User user = entityManager.find(User.class, id);
+        if (user == null) {
+            throw new EntityNotFoundException();
+        }
+        return  getUserById(id);
     }
 
     @Override
@@ -44,12 +46,14 @@ public class UserDaoImpl implements UserDao {
     }
 
     @Override
-    public void update(User updaeteUser) {
+    public void update(User updateUser) {
         try {
-            if (getUserById(updaeteUser.getId()) != null) {
-                entityManager.merge(updaeteUser);
+            if (getUserById(updateUser.getId()) != null) {
+                entityManager.merge(updateUser);
             }
         } catch (EntityNotFoundException e) {
+            throw e;
         }
     }
-}
+        }
+

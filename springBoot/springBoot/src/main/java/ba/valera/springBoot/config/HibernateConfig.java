@@ -2,8 +2,6 @@ package ba.valera.springBoot.config;
 
 
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
@@ -17,7 +15,7 @@ import javax.sql.DataSource;
 import java.util.Objects;
 import java.util.Properties;
 
-@Configuration
+
 @EnableTransactionManagement
 
 @PropertySource("classpath:db.properties")
@@ -30,7 +28,6 @@ public class HibernateConfig {
         this.env = env;
     }
 
-    @Bean
     public DataSource getDataSource() {
         DriverManagerDataSource dataSource = new DriverManagerDataSource();
         dataSource.setDriverClassName(Objects.requireNonNull(env.getProperty("db.driver")));
@@ -40,7 +37,7 @@ public class HibernateConfig {
         return dataSource;
     }
 
-    @Bean
+
     public LocalContainerEntityManagerFactoryBean getEntityFactory() {
         LocalContainerEntityManagerFactoryBean em = new LocalContainerEntityManagerFactoryBean();
         em.setDataSource(getDataSource());
@@ -58,7 +55,7 @@ public class HibernateConfig {
         props.put("hibernate.dialect", env.getProperty("hibernate.dialect"));
         return props;
     }
-    @Bean
+
     public PlatformTransactionManager getTransactionManager() {
         JpaTransactionManager transactionManager = new JpaTransactionManager();
         transactionManager.setEntityManagerFactory(getEntityFactory().getObject());
